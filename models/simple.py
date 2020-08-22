@@ -1,11 +1,5 @@
 from torch import nn
 from torch import Tensor
-from torchvision.models import AlexNet
-
-"""
-These models are designed to map a (28, 28) input (e.g. MNIST images)
-down to a spatial dimension of (1, 1), but can be used on larger images.
-"""
 
 
 class MNISTModel(nn.Module):
@@ -143,23 +137,23 @@ class CIFAR100TopologicalModel(nn.Module):
         )
 
         self.topological_features = nn.Sequential(
-            nn.Conv2d(1, 32, 5),
+            nn.Conv2d(1, 16, 5),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, 5),
+            nn.Conv2d(16, 32, 5),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Conv2d(64, 256, 3),
+            nn.Conv2d(32, 64, 3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(256, 1024, 3),
+            nn.Conv2d(64, 128, 3),
             nn.ReLU(inplace=True)
         )
 
         self.classifier = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(1024, 1024),
+            nn.Linear(128, 64),
             nn.ReLU(inplace=True),
-            nn.Linear(1024, n_classes)
+            nn.Linear(64, n_classes)
         )
 
     def forward(self, image: Tensor, return_topology: bool = False) -> Tensor:
@@ -171,32 +165,3 @@ class CIFAR100TopologicalModel(nn.Module):
         feats = feats.view(feats.size(0), -1)
         preds = self.classifier(feats)
         return preds
-
-
-class AlexNetModel(nn.Module):
-
-    def __init__(self, nc: int, n_classes: int):
-        super().__init__()
-
-        base = AlexNet(n_classes)
-        base.features[0] = nn.Conv2d(nc, 64, kernel_size=11, stride=4, padding=2)
-        self.features = base.features
-        self.avgpool = base.avgpool
-        self.classifier = base.classifier
-
-
-class AlexNetTopologicalModel(nn.Module):
-
-    def __init__(self, nc: int, n_classes: int):
-        super().__init__()
-
-        base = AlexNet(n_classes)
-        base.features[0] = nn.Conv2d(nc, 64, kernel_size=11, stride=4, padding=2)
-        self.spatial_features = nn.Sequential(
-            base.features,
-            base.avgpool
-        )
-
-        self.topological_features = base.features
-
-        self.classifier = base.classifier
