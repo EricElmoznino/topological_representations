@@ -1,5 +1,6 @@
 from torch import nn
 from torch import Tensor
+from torchvision.models import AlexNet
 
 """
 These models are designed to map a (28, 28) input (e.g. MNIST images)
@@ -164,10 +165,39 @@ class CIFAR100TopologicalModel(nn.Module):
 
     def forward(self, image: Tensor, return_topology: bool = False) -> Tensor:
         topological_representation = self.spatial_features(image)
-        topological_representation = topological_representation.view(-1, 1, 28, 28)
+        topological_representation = topological_representation.view(-1, 1, 32, 32)
         if return_topology:
             return topological_representation
         feats = self.topological_features(topological_representation)
         feats = feats.view(feats.size(0), -1)
         preds = self.classifier(feats)
         return preds
+
+
+class AlexNetModel(nn.Module):
+
+    def __init__(self, nc: int, n_classes: int):
+        super().__init__()
+
+        base = AlexNet(n_classes)
+        base.features[0] = nn.Conv2d(nc, 64, kernel_size=11, stride=4, padding=2)
+        self.features = base.features
+        self.avgpool = base.avgpool
+        self.classifier = base.classifier
+
+
+class AlexNetTopologicalModel(nn.Module):
+
+    def __init__(self, nc: int, n_classes: int):
+        super().__init__()
+
+        base = AlexNet(n_classes)
+        base.features[0] = nn.Conv2d(nc, 64, kernel_size=11, stride=4, padding=2)
+        self.spatial_features = nn.Sequential(
+            base.features,
+            base.avgpool
+        )
+
+        self.topological_features = base.features.
+
+        self.classifier = base.classifier
