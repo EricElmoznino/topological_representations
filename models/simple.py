@@ -109,6 +109,7 @@ class CIFAR100Model(nn.Module):
         )
 
         self.classifier = nn.Sequential(
+            nn.Dropout(0.5),
             nn.Linear(1024, 1024),
             nn.ReLU(inplace=True),
             nn.Linear(1024, n_classes)
@@ -155,6 +156,7 @@ class CIFAR100TopologicalModel(nn.Module):
         )
 
         self.classifier = nn.Sequential(
+            nn.Dropout(0.5),
             nn.Linear(128, 64),
             nn.ReLU(inplace=True),
             nn.Linear(64, n_classes)
