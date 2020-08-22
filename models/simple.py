@@ -143,24 +143,23 @@ class CIFAR100TopologicalModel(nn.Module):
         )
 
         self.topological_features = nn.Sequential(
-            nn.Conv2d(1, 16, 5),
+            nn.Conv2d(nc, 32, 5),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Conv2d(16, 32, 5),
+            nn.Conv2d(32, 64, 5),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, 3),
+            nn.Conv2d(64, 256, 3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(64, 128, 3),
-            nn.ReLU(inplace=True),
-            nn.AdaptiveMaxPool2d(1)
+            nn.Conv2d(256, 1024, 3),
+            nn.ReLU(inplace=True)
         )
 
         self.classifier = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(128, 64),
+            nn.Linear(1024, 1024),
             nn.ReLU(inplace=True),
-            nn.Linear(64, n_classes)
+            nn.Linear(1024, n_classes)
         )
 
     def forward(self, image: Tensor, return_topology: bool = False) -> Tensor:
@@ -198,6 +197,6 @@ class AlexNetTopologicalModel(nn.Module):
             base.avgpool
         )
 
-        self.topological_features = base.features.
+        self.topological_features = base.features
 
         self.classifier = base.classifier
