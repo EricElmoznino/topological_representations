@@ -20,7 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_iterations', type=float, default=5e3, help='number of iterations to run')
     parser.add_argument('--batch_size', type=int, default=64, help='batch size')
     parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
-    parser.add_argument('--model', type=str, default='simple', help='model architecture type to use')
+    parser.add_argument('--model', type=str, default='MNIST', help='model architecture type to use')
     parser.add_argument('--dataset', type=str, default='MNIST', help='directory containing dataset')
     parser.add_argument('--topological', action='store_true', help='use topological version of the model')
     args = parser.parse_args()
