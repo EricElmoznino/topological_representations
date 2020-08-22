@@ -143,7 +143,7 @@ class CIFAR100TopologicalModel(nn.Module):
         )
 
         self.topological_features = nn.Sequential(
-            nn.Conv2d(nc, 32, 5),
+            nn.Conv2d(1, 32, 5),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
             nn.Conv2d(32, 64, 5),
