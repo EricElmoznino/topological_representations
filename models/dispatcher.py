@@ -7,5 +7,5 @@ def get_model(name: str, topological: bool, **kwargs) -> nn.Module:
     elif name == 'CIFAR100':
         model = CIFAR100TopologicalModel(**kwargs) if topological else CIFAR100Model(**kwargs)
     else:
-        raise ValueError('Unknown dataset: {}'.format(name))
+        raise ValueError('Unknown model: {}'.format(name))
     return model
