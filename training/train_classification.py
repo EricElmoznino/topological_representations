@@ -68,6 +68,7 @@ if __name__ == '__main__':
     truths = []
     test_loader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False, num_workers=4)
     for images, targets in test_loader:
+        images, targets = images.to(device), targets.to(device)
         with torch.no_grad():
             predictions.append(model(images).argmax(dim=1))
         truths.append(targets)

@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
         image_tensor = image_tensor.to(device)
         with torch.no_grad():
-            topology = model(image_tensor.unsqueeze(0), return_topology=True).squeeze(0)
+            topology = model(image_tensor.unsqueeze(0), return_topology=True).squeeze(0).cpu()
 
         if min_topology_activation is None or topology.min() < min_topology_activation:
             min_topology_activation = topology.min()
